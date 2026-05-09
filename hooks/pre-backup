@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -e
+
+STORAGE="/storage"
+BACKUP_DIR="$STORAGE/backup"
+mkdir -p "$BACKUP_DIR"
+
+for db in production queue cache; do
+  src="$STORAGE/${db}.sqlite3"
+  dst="$BACKUP_DIR/${db}.sqlite3"
+  if [ -f "$src" ]; then
+    sqlite3 "$src" ".backup '$dst'"
+  fi
+done

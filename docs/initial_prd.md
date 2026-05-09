@@ -201,16 +201,16 @@ ONCE installs and supervises a Docker image. Requirements the image must satisfy
 
 - HTTP on port 80
 - Healthcheck endpoint at `/up` (Rails 8 ships this by default)
-- All persistent data under `/storage` (ONCE also mounts the same volume at `/rails/storage` for Rails compatibility)
+- All persistent data under `/storage` (ONCE also mounts the same volume at `storage` for Rails compatibility)
 - Optional `/hooks/pre-backup` for safe SQLite snapshots
 
 Concretely:
 
-- The Rails 8 default Dockerfile is essentially compatible. Adjust to bind Puma to port 80 and store SQLite databases in `/rails/storage`:
-  - `DATABASE_URL=sqlite3:/rails/storage/production.sqlite3`
-  - `SOLID_QUEUE_DATABASE_URL=sqlite3:/rails/storage/queue.sqlite3`
-  - `SOLID_CACHE_DATABASE_URL=sqlite3:/rails/storage/cache.sqlite3`
-- `hooks/pre-backup` runs `sqlite3 /rails/storage/production.sqlite3 ".backup '/rails/storage/backup/production.sqlite3'"` for each DB so ONCE copies a consistent snapshot. (Without the hook ONCE briefly pauses the container during backup — also fine, just less smooth.)
+- The Rails 8 default Dockerfile is essentially compatible. Adjust to bind Puma to port 80 and store SQLite databases in `/storage`:
+  - `DATABASE_URL=sqlite3:/storage/production.sqlite3`
+  - `SOLID_QUEUE_DATABASE_URL=sqlite3:/storage/queue.sqlite3`
+  - `SOLID_CACHE_DATABASE_URL=sqlite3:/storage/cache.sqlite3`
+- `hooks/pre-backup` runs `sqlite3 /storage/production.sqlite3 ".backup '/storage/backup/production.sqlite3'"` for each DB so ONCE copies a consistent snapshot. (Without the hook ONCE briefly pauses the container during backup — also fine, just less smooth.)
 - Slash command registration runs once after first install via `bin/rails feedbot:register_commands` from inside the container (`once exec <app> bin/rails feedbot:register_commands`).
 
 Custom env vars (Discord credentials) are set at install time via ONCE's CLI (`once install <image> --env KEY=VALUE`, repeatable) or the TUI's Settings → Environment screen. Required:
