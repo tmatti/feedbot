@@ -27,29 +27,35 @@ class Subscription < ApplicationRecord
   def derived_cron
     return nil unless mode == "digest" && schedule_kind.present?
 
-    if CRON_MAP.key?(schedule_kind)
-      CRON_MAP[schedule_kind]
-    else
-      time = schedule_time.presence || "09:00"
-      hh, mm = time.split(":").map(&:to_i)
-      day = schedule_kind == "weekly" ? "1" : "*"
-      "#{mm} #{hh} * * #{day}"
-    end
+    base =
+      if CRON_MAP.key?(schedule_kind)
+        CRON_MAP[schedule_kind]
+      else
+        time = schedule_time.presence || "09:00"
+        hh, mm = time.split(":").map(&:to_i)
+        day = schedule_kind == "weekly" ? "1" : "*"
+        "#{mm} #{hh} * * #{day}"
+      end
+    "#{base} #{iana_timezone}"
   end
 
   def compute_next_run_at!
     cron_str = derived_cron
     return unless cron_str
 
-    tz = ActiveSupport::TimeZone[server.timezone] || Time.zone
-    cron = Fugit.parse_cron(cron_str)
     update!(
       schedule_cron: cron_str,
-      next_run_at: cron.next_time(tz).to_t
+      next_run_at: Fugit.parse_cron(cron_str).next_time.to_t
     )
   end
 
   private
+
+  # Fugit needs an IANA zone name in the cron string; resolve ActiveSupport
+  # aliases like "Eastern Time (US & Canada)" to "America/New_York".
+  def iana_timezone
+    ActiveSupport::TimeZone[server.timezone]&.tzinfo&.name || server.timezone
+  end
 
   def schedule_required_for_digest
     return unless mode == "digest"
