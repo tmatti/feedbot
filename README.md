@@ -1,6 +1,6 @@
 # Feedbot
 
-A Discord bot that monitors RSS/Atom feeds and posts new entries to your server's channels. Subscriptions are managed via slash commands. Supports both real-time delivery (post as entries arrive) and digest delivery (batched on a schedule). Includes a JSON API and a minimal web UI for OAuth login and API token management.
+A Discord bot that monitors RSS/Atom feeds and posts new entries to your server's channels. Subscriptions are managed via slash commands. Supports both real-time delivery (post as entries arrive) and digest delivery (batched on a schedule).
 
 ## How it works
 
@@ -44,8 +44,7 @@ The app runs on `http://localhost:3000`.
 
 1. Create an application at [discord.com/developers](https://discord.com/developers/applications)
 2. Under **Bot**, enable the bot and copy the token
-3. Under **OAuth2**, add a redirect URI: `http://localhost:3000/auth/discord/callback`
-4. Copy the application ID, public key, and OAuth client credentials
+3. Copy the application ID and public key from the application's **General Information** page
 
 Create a `.env` file (or set these in your shell):
 
@@ -53,8 +52,6 @@ Create a `.env` file (or set these in your shell):
 DISCORD_APP_ID=
 DISCORD_PUBLIC_KEY=
 DISCORD_BOT_TOKEN=
-DISCORD_OAUTH_CLIENT_ID=
-DISCORD_OAUTH_CLIENT_SECRET=
 ```
 
 ### Register slash commands
@@ -96,9 +93,7 @@ once install ghcr.io/tmatti/feedbot:latest \
   --host feedbot.example.com \
   --env DISCORD_APP_ID=... \
   --env DISCORD_PUBLIC_KEY=... \
-  --env DISCORD_BOT_TOKEN=... \
-  --env DISCORD_OAUTH_CLIENT_ID=... \
-  --env DISCORD_OAUTH_CLIENT_SECRET=...
+  --env DISCORD_BOT_TOKEN=...
 ```
 
 Then register slash commands:
@@ -124,24 +119,6 @@ once update feedbot
 ### Backups
 
 `hooks/pre-backup` runs SQLite's online backup before each ONCE backup, producing a consistent snapshot without pausing the container. Backups are managed from the ONCE TUI (Settings → Backups).
-
-## API
-
-The JSON API lives at `/api/v1`. Authenticate with a bearer token minted from `/account` (after Discord OAuth login) or with the session cookie from the OAuth flow.
-
-```
-GET    /api/v1/servers
-GET    /api/v1/servers/:id
-PATCH  /api/v1/servers/:id
-GET    /api/v1/servers/:id/subscriptions
-POST   /api/v1/servers/:id/subscriptions
-GET    /api/v1/subscriptions/:id
-PATCH  /api/v1/subscriptions/:id
-DELETE /api/v1/subscriptions/:id
-GET    /api/v1/feeds/:id
-GET    /api/v1/feeds/:id/entries
-GET    /api/v1/subscriptions/:id/deliveries
-```
 
 ## Architecture notes
 
