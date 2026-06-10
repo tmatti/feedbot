@@ -29,7 +29,7 @@ module Feedbot
         def dispatch_autocomplete(interaction)
           sub = interaction.dig("data", "options", 0, "name")
           case sub
-          when "remove" then FeedRemove.new(interaction).autocomplete
+          when "remove", "edit" then SubscriptionAutocomplete.new(interaction).call
           end
         end
       end

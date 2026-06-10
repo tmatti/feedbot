@@ -23,24 +23,6 @@ module Feedbot
           text_response("Removed subscription to **#{feed_title}**.")
         end
 
-        def autocomplete
-          guild_id = @interaction["guild_id"].to_i
-          server   = Server.find_by(discord_id: guild_id)
-
-          choices = if server
-            server.subscriptions.active.includes(:feed).limit(25).map do |sub|
-              {
-                name: (sub.feed.title.presence || sub.feed.url).truncate(100),
-                value: sub.id.to_s
-              }
-            end
-          else
-            []
-          end
-
-          { type: 8, data: { choices: choices } }
-        end
-
         private
 
         def parse_options(options_array)
