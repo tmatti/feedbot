@@ -32,6 +32,8 @@ module Feedbot
         else
           raise FetchError, "HTTP #{response.status}"
         end
+      rescue Faraday::Error => e
+        raise FetchError, e.message
       end
 
       class FetchError < StandardError; end
@@ -44,6 +46,7 @@ module Feedbot
 
       def connection
         Faraday.new do |f|
+          f.response :follow_redirects, limit: 5
           f.adapter Faraday.default_adapter
         end
       end

@@ -13,6 +13,7 @@ gem "ed25519", ">= 1.3"
 gem "feedjira", "~> 3.2"
 # HTTP client
 gem "faraday", "~> 2.0"
+gem "faraday-follow_redirects", "~> 0.3"
 # Cron expression parsing for digest scheduling
 gem "fugit", "~> 1.11"
 
@@ -28,6 +29,11 @@ gem "bootsnap", require: false
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false
+
+group :test do
+  # Stub HTTP requests in tests
+  gem "webmock"
+end
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
