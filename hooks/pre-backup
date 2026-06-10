@@ -5,7 +5,8 @@ STORAGE="/storage"
 BACKUP_DIR="$STORAGE/backup"
 mkdir -p "$BACKUP_DIR"
 
-for db in production queue cache; do
+# Database filenames must match config/database.yml (production section).
+for db in production production_queue production_cache; do
   src="$STORAGE/${db}.sqlite3"
   dst="$BACKUP_DIR/${db}.sqlite3"
   if [ -f "$src" ]; then
