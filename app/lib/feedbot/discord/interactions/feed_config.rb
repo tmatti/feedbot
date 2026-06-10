@@ -14,7 +14,7 @@ module Feedbot
             return text_response("No timezone provided.", ephemeral: true)
           end
 
-          unless ActiveSupport::TimeZone[tz_value] || TZInfo::Timezone.get(tz_value) rescue false
+          unless valid_timezone?(tz_value)
             return text_response("Unknown timezone: `#{tz_value}`. Use an IANA timezone name (e.g. `America/New_York`).", ephemeral: true)
           end
 
@@ -29,6 +29,14 @@ module Feedbot
         end
 
         private
+
+        def valid_timezone?(name)
+          return true if ActiveSupport::TimeZone[name]
+          TZInfo::Timezone.get(name)
+          true
+        rescue TZInfo::InvalidTimezoneIdentifier
+          false
+        end
 
         def text_response(content, ephemeral: false)
           data = { content: content }

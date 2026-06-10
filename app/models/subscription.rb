@@ -64,6 +64,6 @@ class Subscription < ApplicationRecord
 
   def schedule_time_format
     return if schedule_time.blank?
-    errors.add(:schedule_time, "must be HH:MM") unless schedule_time.match?(/\A\d{2}:\d{2}\z/)
+    errors.add(:schedule_time, "must be HH:MM") unless schedule_time.match?(/\A([01]?\d|2[0-3]):[0-5]\d\z/)
   end
 end

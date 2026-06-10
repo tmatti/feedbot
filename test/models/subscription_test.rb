@@ -102,6 +102,25 @@ class SubscriptionTest < ActiveSupport::TestCase
     assert_not_includes Subscription.due_digests, never_scheduled
   end
 
+  test "schedule_time accepts padded and unpadded valid times" do
+    [ "09:00", "9:00", "23:59", "0:05" ].each do |time|
+      sub = build_subscription(schedule_kind: "daily", schedule_time: time)
+      assert sub.valid?, "expected #{time.inspect} to be valid"
+      sub.destroy!
+    end
+  end
+
+  test "schedule_time rejects out-of-range times" do
+    [ "99:99", "24:00", "12:60", "noon", "1200" ].each do |time|
+      sub = @server.subscriptions.new(
+        feed: @feed, discord_channel_id: 2222, created_by_discord_user_id: 3333,
+        mode: "digest", schedule_kind: "daily", schedule_time: time
+      )
+      assert_not sub.valid?, "expected #{time.inspect} to be invalid"
+      assert_includes sub.errors[:schedule_time], "must be HH:MM"
+    end
+  end
+
   test "digest mode requires schedule_kind" do
     sub = @server.subscriptions.new(
       feed: @feed, discord_channel_id: 2222, created_by_discord_user_id: 3333,

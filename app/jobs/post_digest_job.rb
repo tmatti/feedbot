@@ -13,6 +13,7 @@ class PostDigestJob < ApplicationJob
 
     chunks.each do |chunk|
       embeds = chunk.map { |e| Feedbot::Discord::EmbedBuilder.build(e, sub.feed) }
+      rate_limit_attempts = 0
       begin
         client.post_message(sub.discord_channel_id, embeds: embeds)
         chunk.each do |entry|
@@ -28,6 +29,10 @@ class PostDigestJob < ApplicationJob
         end
         break if [10003, 50001].include?(e.code)
       rescue Feedbot::Discord::RestClient::RateLimitError => e
+        # Bounded so a persistently rate-limited channel can't pin a worker
+        # forever; the next digest run picks up the undelivered entries.
+        rate_limit_attempts += 1
+        raise if rate_limit_attempts > 5
         sleep(e.retry_after)
         retry
       end
