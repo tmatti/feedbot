@@ -29,7 +29,9 @@ module Feedbot
       def post_message(channel_id, embeds:, content: nil)
         body = { embeds: embeds }
         body[:content] = content if content
-        response = @conn.post("/channels/#{channel_id}/messages", body)
+        # Paths must be relative: a leading slash would replace the /api/v10
+        # prefix of the connection's base URL.
+        response = @conn.post("channels/#{channel_id}/messages", body)
         handle_response(response)
       end
 
@@ -37,12 +39,12 @@ module Feedbot
         body = {}
         body[:embeds] = embeds if embeds
         body[:content] = content if content
-        response = @conn.patch("/webhooks/#{@app_id}/#{interaction_token}/messages/@original", body)
+        response = @conn.patch("webhooks/#{@app_id}/#{interaction_token}/messages/@original", body)
         handle_response(response)
       end
 
       def put_global_commands(commands)
-        response = @conn.put("/applications/#{@app_id}/commands", commands)
+        response = @conn.put("applications/#{@app_id}/commands", commands)
         handle_response(response)
       end
 

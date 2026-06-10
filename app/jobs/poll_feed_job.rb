@@ -21,10 +21,11 @@ class PollFeedJob < ApplicationJob
         PostDeliveryJob.perform_later(sub_id, entry.id)
       end
     end
-  rescue Feedbot::Feeds::Fetcher::FetchError => e
-    Feed.find_by(id: feed_id)&.note_failure!(e.message)
   rescue => e
+    # Count exactly one failure per poll cycle and let the backoff schedule
+    # drive the next attempt — re-raising would have SolidQueue retry and
+    # inflate consecutive_failures.
+    Rails.logger.error("[PollFeedJob] feed=#{feed_id} #{e.class}: #{e.message}")
     Feed.find_by(id: feed_id)&.note_failure!(e.message)
-    raise
   end
 end
