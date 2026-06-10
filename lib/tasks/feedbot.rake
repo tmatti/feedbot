@@ -37,7 +37,10 @@ namespace :feedbot do
           {
             type: 1,  # SUB_COMMAND
             name: "list",
-            description: "List feed subscriptions for this server"
+            description: "List feed subscriptions for this server",
+            options: [
+              { type: 4, name: "page", description: "Page number", required: false, min_value: 1 }
+            ]
           },
           {
             type: 1,  # SUB_COMMAND

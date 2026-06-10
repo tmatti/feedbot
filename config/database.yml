@@ -20,8 +20,9 @@ test:
   <<: *default
   database: storage/test.sqlite3
 
-# Store production database in the storage/ directory, which by default
-# is mounted as a persistent Docker volume in config/deploy.yml.
+# Store production databases in the storage/ directory, which ONCE mounts
+# as a persistent volume. Filenames here must stay in sync with
+# hooks/pre-backup.
 production:
   primary:
     <<: *default

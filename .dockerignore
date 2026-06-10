@@ -39,9 +39,9 @@
 # Ignore CI service files.
 /.github
 
-# Ignore Kamal files.
+# Ignore deploy config files.
 /config/deploy*.yml
-/.kamal
+/config/deploy.yml
 
 # Ignore development files
 /.devcontainer
