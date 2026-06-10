@@ -12,7 +12,7 @@ gem "ed25519", ">= 1.3"
 # RSS/Atom feed parsing
 gem "feedjira", "~> 3.2"
 # HTTP client
-gem "faraday", "~> 2.0"
+gem "faraday", "~> 2.14"
 gem "faraday-follow_redirects", "~> 0.3"
 # Cron expression parsing for digest scheduling
 gem "fugit", "~> 1.11"
