@@ -12,7 +12,7 @@ class PostDeliveryJob < ApplicationJob
     client = Feedbot::Discord::RestClient.new
     embed  = Feedbot::Discord::EmbedBuilder.build(entry, sub.feed)
 
-    response = client.post_message(sub.discord_channel_id, embeds: [embed])
+    response = client.post_message(sub.discord_channel_id, embeds: [ embed ])
 
     # create_or_find_by! treats a concurrent insert for the same
     # (subscription, entry) as success instead of raising RecordNotUnique.
@@ -24,7 +24,7 @@ class PostDeliveryJob < ApplicationJob
     retry_job wait: e.retry_after.seconds
   rescue Feedbot::Discord::RestClient::DiscordError => e
     # 10003 = Unknown Channel, 50001 = Missing Access
-    if [10003, 50001].include?(e.code)
+    if [ 10003, 50001 ].include?(e.code)
       sub&.update!(status: "disabled")
     else
       Delivery.create_or_find_by!(subscription_id: sub_id, entry_id: entry_id) do |d|

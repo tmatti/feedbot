@@ -12,7 +12,7 @@ class Feed < ApplicationRecord
 
   def note_failure!(error_message)
     failures = consecutive_failures + 1
-    backoff = BACKOFF_MINUTES[ [ failures - 1, BACKOFF_MINUTES.length - 1 ].min ].minutes
+    backoff = BACKOFF_MINUTES[[ failures - 1, BACKOFF_MINUTES.length - 1 ].min].minutes
     attrs = {
       consecutive_failures: failures,
       last_error: error_message,

@@ -27,7 +27,7 @@ class PostDigestJob < ApplicationJob
             d.error = e.message
           end
         end
-        break if [10003, 50001].include?(e.code)
+        break if [ 10003, 50001 ].include?(e.code)
       rescue Feedbot::Discord::RestClient::RateLimitError => e
         # Bounded so a persistently rate-limited channel can't pin a worker
         # forever; the next digest run picks up the undelivered entries.

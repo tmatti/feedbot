@@ -64,7 +64,7 @@ class RespondToInteractionJob < ApplicationJob
       client.patch_interaction_response(
         interaction_token,
         content: "Subscribed to **#{feed.title.presence || url}**! Here's the latest entry:",
-        embeds: [embed]
+        embeds: [ embed ]
       )
     else
       client.patch_interaction_response(

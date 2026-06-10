@@ -45,7 +45,7 @@ module Feedbot
             footer: { text: footer_text(page, total_pages, total) }
           }
 
-          { type: 4, data: { embeds: [embed] } }
+          { type: 4, data: { embeds: [ embed ] } }
         end
 
         private
