@@ -10,7 +10,7 @@ gem "puma", ">= 5.0"
 # Discord interaction signature verification
 gem "ed25519", ">= 1.3"
 # RSS/Atom feed parsing
-gem "feedjira", "~> 3.2"
+gem "feedjira", "~> 4.0"
 # HTTP client
 gem "faraday", "~> 2.0"
 gem "faraday-follow_redirects", "~> 0.3"
