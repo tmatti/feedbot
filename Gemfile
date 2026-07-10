@@ -15,7 +15,7 @@ gem "feedjira", "~> 3.2"
 gem "faraday", "~> 2.0"
 gem "faraday-follow_redirects", "~> 0.3"
 # Cron expression parsing for digest scheduling
-gem "fugit", "~> 1.11"
+gem "fugit", "~> 1.13"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
